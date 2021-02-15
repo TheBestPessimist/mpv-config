@@ -4,10 +4,13 @@
 
 -- betterchapters.lua
 -- Loads the next or previous playlist entry if there are no more chapters in the seek direction.
--- To bind in input.conf, use: <keybind> script_binding <keybind name>
--- Keybind names: chapterplaylist-next, chapterplaylist-prev
--- Recommended to use with autoload.lua
+-- Recommended to use with autoload.lua which is enabled by default in mpv.
 
+-- How to use
+-- Keybind names: chapterplaylist-next, chapterplaylist-prev
+-- To bind in input.conf, use:
+-- PGUP       script-binding chapterplaylist-prev
+-- PGDWN      script-binding chapterplaylist-next
 
 
 local previous_seek_direction = 0
