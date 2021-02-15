@@ -25,31 +25,31 @@ function chapter_seek(direction)
         if previous_seek_direction <= -1 then
             mp.command("playlist_prev")
             mp.commandv("script-message", "osc-playlist")
-            reset_previous_direction()
+            reset_previous_seek_direction()
         else
             mp.osd_message("« Press again to move to Previous file.", 4)
             previous_seek_direction = -1
-            reset_previous_direction()
+            reset_previous_seek_direction()
         end
     elseif seek_direction >= chapters then
         if previous_seek_direction >= 1 then
             mp.command("playlist_next")
             mp.commandv("script-message", "osc-playlist")
-            reset_previous_direction()
+            reset_previous_seek_direction()
         else
             mp.osd_message("» Press again to move to Next file.", 4)
             previous_seek_direction = 1
-            reset_previous_direction()
+            reset_previous_seek_direction()
         end
     else
         mp.commandv("add", "chapter", direction)
         mp.commandv("script-message", "osc-chapterlist")
-        reset_previous_direction()
+        reset_previous_seek_direction()
     end
 end
 
 local previous_reset_timer = mp.add_timeout(1, function() end)
-function reset_previous_direction()
+function reset_previous_seek_direction()
     if previous_reset_timer:is_enabled() then
         previous_reset_timer:kill()
     end
