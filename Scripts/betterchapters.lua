@@ -10,31 +10,32 @@
 
 
 
-local previous_direction = 0
+local previous_seek_direction = 0
 function chapter_seek(direction)
     local chapters = mp.get_property_number("chapters")
     if chapters == nil then chapters = 0 end
     local chapter  = mp.get_property_number("chapter")
     if chapter == nil then chapter = 0 end
 
-    if chapter+direction < 0 then
-        if previous_direction <= -1 then
+    local seek_direction = chapter + direction
+    if seek_direction < 0 then
+        if previous_seek_direction <= -1 then
             mp.command("playlist_prev")
             mp.commandv("script-message", "osc-playlist")
             reset_previous_direction()
         else
             mp.osd_message("« Press again to move to Previous file.", 4)
-            previous_direction = -1
+            previous_seek_direction = -1
             reset_previous_direction()
         end
-    elseif chapter+direction >= chapters then
-        if previous_direction >= 1 then
+    elseif seek_direction >= chapters then
+        if previous_seek_direction >= 1 then
             mp.command("playlist_next")
             mp.commandv("script-message", "osc-playlist")
             reset_previous_direction()
         else
             mp.osd_message("» Press again to move to Next file.", 4)
-            previous_direction = 1
+            previous_seek_direction = 1
             reset_previous_direction()
         end
     else
@@ -49,9 +50,8 @@ function reset_previous_direction()
     if previous_reset_timer:is_enabled() then
         previous_reset_timer:kill()
     end
-    previous_reset_timer = mp.add_timeout(4, function() previous_direction = 0 end)
+    previous_reset_timer = mp.add_timeout(4, function() previous_seek_direction = 0 end)
 end
-
 
 mp.add_key_binding(nil, "chapterplaylist-next", function() chapter_seek(1) end)
 mp.add_key_binding(nil, "chapterplaylist-prev", function() chapter_seek(-1) end)
