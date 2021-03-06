@@ -16,6 +16,7 @@
 
 local default_reset_timeout = 5
 local previous_desired_chapter = 0
+
 function chapter_seek(direction)
     local chapters = mp.get_property_number("chapters")
     if chapters == nil then chapters = 0 end
@@ -23,21 +24,6 @@ function chapter_seek(direction)
     if chapter == nil then chapter = 0 end
 
     local desired_chapter = chapter + direction
-
-    -- mp.osd_message(
-    --     "chapters " .. chapters .. "\n" ..
-    --     "chapter " .. chapter .. "\n" ..
-    --     "desired_chapter " .. desired_chapter .. "\n"
-
-    --     , 4)
-
-
-
-
-
-
-
-
     if desired_chapter < 0 then
         if previous_desired_chapter <= -1 then
             mp.command("playlist_prev")
@@ -60,20 +46,17 @@ function chapter_seek(direction)
         end
     else
         mp.commandv("add", "chapter", direction)
-        mp.commandv("script-message", "osc-chapterlist")
-        reset_previous_desired_chapter(0.1)
+        reset_previous_desired_chapter()
+        mp.add_timeout(0.2, function() mp.commandv("script-message", "osc-chapterlist") end)
     end
 end
 
 local active_reset_timer = mp.add_timeout(0.001, function() end)
-function reset_previous_desired_chapter(timeout)
-    local rt = timeout
-    if rt == nil then rt = default_reset_timeout end
-
+function reset_previous_desired_chapter()
     if active_reset_timer:is_enabled() then
         active_reset_timer:kill()
     end
-    active_reset_timer = mp.add_timeout(rt, function() previous_desired_chapter = 0 end)
+    active_reset_timer = mp.add_timeout(default_reset_timeout, function() previous_desired_chapter = 0 end)
 end
 
 mp.add_key_binding(nil, "chapterplaylist-next", function() chapter_seek(1) end)
