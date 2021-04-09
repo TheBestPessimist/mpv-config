@@ -1,18 +1,19 @@
--- Source: https://gist.github.com/Hakkin/4f978a5c87c31f7fe3ae
--- Source: https://github.com/mpv-player/mpv/issues/4738#issuecomment-321298846
--- Source: https://github.com/Argon-/mpv-config/blob/master/scripts/betterchapters.lua#L20
+--[[
+Source: https://gist.github.com/Hakkin/4f978a5c87c31f7fe3ae
+Source: https://github.com/mpv-player/mpv/issues/4738#issuecomment-321298846
+Source: https://github.com/Argon-/mpv-config/blob/master/scripts/betterchapters.lua#L20
 
--- betterchapters.lua
--- Loads the next or previous playlist entry if there are no more chapters in the seek direction.
--- Recommended to use with autoload.lua which is enabled by default in mpv.
+betterchapters.lua
+Loads the next or previous playlist entry if there are no more chapters in the seek direction.
+Recommended to use with autoload.lua which is enabled by default in mpv.
 
--- How to use
--- Keybind names: chapterplaylist-next, chapterplaylist-prev
---
--- To bind in input.conf, use:
--- PGUP       script-binding chapterplaylist-prev
--- PGDWN      script-binding chapterplaylist-next
+How to use
+Keybind names: chapterplaylist-next, chapterplaylist-prev
+To bind in input.conf, use:
+PGUP       script-binding chapterplaylist-prev
+PGDWN      script-binding chapterplaylist-next
 
+  ]]
 
 local default_reset_timeout = 5
 local previous_desired_chapter = 0
