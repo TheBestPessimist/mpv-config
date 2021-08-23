@@ -1,0 +1,41 @@
+--[[
+https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-battery?redirectedfrom=MSDN
+
+result == 1 => on battery
+result >= 2 => on plug
+
+Command: WMIC Path Win32_Battery Get BatteryStatus
+ ]]
+
+local plugStatus = {
+    B = { name = "Battery",     profile = "video-low-quality" },
+    P = { name = "Plugged In",  profile = "video-max-quality" }
+}
+
+local oldStatus = plugStatus.P
+
+function autoSwitchProfile(success, result, error)
+    local currentStatus = plugStatus.P
+    if result.stdout:find("1", 1, true) then
+        currentStatus = plugStatus.B
+    end
+
+    -- if same profile, quit
+    if oldStatus == currentStatus then return end
+
+    -- update current power profile
+    oldStatus = currentStatus
+    mp.osd_message("Device Plug Status changed to: " .. currentStatus.name .. ".\n=> Switching to " .. currentStatus.profile .. " profile.", 3)
+    mp.commandv("apply-profile", currentStatus.profile)
+end
+
+function getPluggedInStatus()
+    mp.command_native_async({
+          name = "subprocess",
+          args = {"WMIC", "Path", "Win32_Battery", "Get", "BatteryStatus"},
+          capture_stdout = true,
+    },
+    autoSwitchProfile)
+end
+
+mp.add_periodic_timer(60, getPluggedInStatus)
