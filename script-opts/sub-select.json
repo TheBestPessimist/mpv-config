@@ -1,0 +1,9 @@
+[
+    {
+        "description": "BAN autoselecting of signs and songs subtitles. FUCK THOSE",
+        "alang": "*",
+        "slang": "*",
+        "blacklist": ["sign", "song", "sing"],
+        "whitelist": ["dialog", "dialogue", "full"]
+    }
+]
